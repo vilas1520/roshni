@@ -1,0 +1,42 @@
+/* Sidebar */
+.sidebar {
+  background-color: #343a40; /* bg-dark */
+  color: white;
+  min-height: 100vh;
+  padding: 1rem;
+}
+
+/* Sidebar links */
+.sidebar .nav-link {
+  color: white;
+}
+
+.sidebar .nav-link:hover {
+  color: #adb5bd;
+}
+
+/* Footer */
+footer {
+  background-color: #343a40;
+  color: white;
+  margin-top: 0;
+}
+
+footer .container {
+  padding: 1rem;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+}
+
+footer a:hover {
+  text-decoration: underline;
+}
+
+footer .bg-secondary {
+  background-color: #6c757d !important;
+}
+
+
