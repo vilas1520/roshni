@@ -1,51 +1,27 @@
-version: "3.8"
-
+version: "3.9"
 services:
-  web:
+  app:
     build: .
     container_name: roshni-app
     ports:
-      - "${APP_PORT:-8081}:80"   # Use 8081 by default to avoid Jenkins (8080) conflict
-    environment:
-      - APACHE_RUN_USER=www-data
-      - APACHE_RUN_GROUP=www-data
+      - "8081:80"
+    volumes:
+      - .:/var/www/html
     depends_on:
       - db
-    networks:
-      - roshni-net
 
   db:
-    image: mysql:5.7
+    image: mysql:8.0
     container_name: roshni-db
-    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
-      MYSQL_DATABASE: ${MYSQL_DATABASE:-ems_db}
-      MYSQL_USER: ${MYSQL_USER:-ems_user}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-ems_pass}
-    volumes:
-      - db_data:/var/lib/mysql
-    networks:
-      - roshni-net
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: roshni
+      MYSQL_USER: roshni
+      MYSQL_PASSWORD: roshni
     ports:
       - "3306:3306"
-
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    container_name: roshni-phpmyadmin
-    restart: always
-    environment:
-      PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpass}
-    ports:
-      - "${PHPMYADMIN_PORT:-8082}:80"
-    depends_on:
-      - db
-    networks:
-      - roshni-net
+    volumes:
+      - db_data:/var/lib/mysql
 
 volumes:
   db_data:
-
-networks:
-  roshni-net:
