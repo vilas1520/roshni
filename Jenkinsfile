@@ -9,25 +9,32 @@ pipeline {
             }
         }
 
-        stage('Build Docker Images') {
+        stage('Stop Old Containers') {
             steps {
-                echo "🐳 Building Docker images..."
-                sh 'docker-compose build'
+                echo "🛑 Stopping old containers..."
+                sh '''
+                docker-compose down -v || true
+                '''
             }
         }
 
-        stage('Deploy Containers') {
+        stage('Build & Deploy Containers') {
             steps {
-                echo "🚀 Deploying containers..."
-                sh 'docker-compose down'
-                sh 'docker-compose up -d'
+                echo "🐳 Building and starting containers..."
+                sh '''
+                docker-compose up -d --build
+                '''
             }
         }
 
         stage('Verify Deployment') {
             steps {
-                echo "🔍 Checking running containers..."
-                sh 'docker ps -a'
+                echo "🔍 Verifying running containers..."
+                sh '''
+                docker ps
+                curl -I http://localhost:8081 || true
+                curl -I http://localhost:8082 || true
+                '''
             }
         }
     }
@@ -35,6 +42,9 @@ pipeline {
     post {
         always {
             echo "✅ Pipeline finished!"
+        }
+        failure {
+            echo "❌ Pipeline failed!"
         }
     }
 }
